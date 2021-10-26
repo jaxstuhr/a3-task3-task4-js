@@ -10,6 +10,7 @@ knitr::opts_chunk$set(echo = TRUE, message = FALSE, warning = FALSE)
 library(tidyverse)
 library(janitor)
 library(here)
+library(kableExtra)
 ```
 
 ```{r}
@@ -40,3 +41,52 @@ ggplot(data = urchins, aes(x = SIZE)) +
 
 Fig 1: Urchin diameter distribution [cm] for red and purple urchins in Santa Barbara, CA
 
+### Descriptive statistics table
+Building a summary table including the mean, median, standard deviation, and sample size and sorting by species (red or purple urchin).
+
+```{r}
+urchin_stats = urchins %>% 
+  # group by common name of urchins (red or purple)
+  group_by(COMMON_NAME) %>% 
+  summarize(
+    # add summary stats mean, median, sd, sample size
+    mean_size = round(mean(SIZE),1),
+    median_size = median(SIZE),
+    sd_size = round(sd(SIZE),1),
+    sample_size = n()
+  )
+
+urchin_stats %>%
+  # build table w kbl extra, rename columns
+  kbl(caption = "Table 1: Santa Barbara Urchins Summary Statistics", col.names = c("Common Name", "Mean Diameter [cm]", "Median Diameter [cm]", "Standard Deviation [cm]", "Sample Size")) %>%
+  kable_classic(full_width = F, html_font = "Cambria")
+```
+
+### Section 1 Analysis
+
+```{r}
+# calculate difference
+mean_size_dif = (urchin_stats$mean_size[2] - urchin_stats$mean_size[1])
+# calculate percent difference between sample means
+mean_size_percent_dif = 
+  round(
+    200 * 
+      (urchin_stats$mean_size[2] - urchin_stats$mean_size[1]) /
+      (urchin_stats$mean_size[2] + urchin_stats$mean_size[1]), 
+    1)
+#min and max red urchin size
+reds = urchins %>% 
+  filter(COMMON_NAME == "Red Urchin") 
+min_red = min(reds$SIZE)
+max_red = max(reds$SIZE)
+#min and max purple urchin size
+purples = urchins %>% 
+  filter(COMMON_NAME == "Purple Urchin") 
+min_purple = min(purples$SIZE)
+max_purple = max(purples$SIZE)
+
+```
+
+The red urchins were, on average `r mean_size_dif` cm larger and  `r mean_size_percent_dif` % larger in diameter than the purple urchins. The red urchins also had a much larger spread, with diameters ranging from `r min_red` to `r max_red` cm, whereas the purple urchins diamters ranged from `r min_purple` to `r max_purple` cm.
+
+## Section 2: Exploring purple urchin counts by site and year
