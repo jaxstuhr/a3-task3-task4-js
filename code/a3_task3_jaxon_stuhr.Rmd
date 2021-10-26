@@ -5,7 +5,38 @@ date: "10/25/2021"
 output: html_document
 ---
 
-```{r setup, include=FALSE}
-knitr::opts_chunk$set(echo = TRUE)
+```{r setup, include=TRUE, message = FALSE, warning=FALSE}
+knitr::opts_chunk$set(echo = TRUE, message = FALSE, warning = FALSE)
+library(tidyverse)
+library(janitor)
+library(here)
 ```
+
+```{r}
+# read in urchins data 
+urchins = read.csv(here("data", "urchins.csv"))
+```
+
+## Section 1: Size comparisons, purple and red urchins
+
+### Data Visualization
+A comparison of the size distribution for purple and red urchins.
+
+```{r}
+# plot using urchins data, x var = size
+ggplot(data = urchins, aes(x = SIZE)) + 
+  # histogram w 12 bins
+  geom_histogram(bins = 12, fill = "Dark Green") + 
+  # facet wrap based on common name
+  facet_wrap(~ COMMON_NAME) +
+  # add x, y labels and title
+  labs(x = "Urchin Diameter [cm]", 
+       y = "Count", 
+       title = "Size Distribution for Purple and Red Sea Urchins") +
+  # center title
+  theme(plot.title = element_text(hjust = 0.5))
+
+```
+
+Fig 1: Urchin diameter distribution [cm] for red and purple urchins in Santa Barbara, CA
 
