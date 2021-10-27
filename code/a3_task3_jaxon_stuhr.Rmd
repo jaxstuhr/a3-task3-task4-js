@@ -113,7 +113,39 @@ purple_urchins = urchins %>%
   ))
 ```
 
-## Building a table to store the total number of purple urchins observed by site and year
+### Building a table to store the total number of purple urchins observed by site and year
+
+```{r, include=FALSE}
+# start w purples
+purple_urchins_by_site_year = purple_urchins %>% 
+  #group by site and yr
+  group_by(site_full, YEAR) %>% 
+  # count em
+  count()
+```
+
+### Plotting counts of purple urchins recorded at each site by year
+
+```{r}
+# plot w x =  yr, y = count
+ggplot(purple_urchins_by_site_year, aes(x = YEAR, y = n)) + 
+  # column graph
+  geom_col() +
+  # break up by site
+  facet_wrap(~ site_full) + 
+  # add labels
+  labs(x = "Year", y = "Number of Observed Urchins", title = "Observed Urchins by Site and Year") +
+  theme_light() + 
+  # center title
+  theme(plot.title = element_text(hjust = 0.5))
+```
+Fig 2: Observed Urchin counts for purple urchins at 5 sites around Santa Barbara, CA for years 2008 - 2020
+
+### Purple Urchins Analysis
+
+
+
+
 
 
 
