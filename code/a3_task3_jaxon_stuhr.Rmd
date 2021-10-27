@@ -11,6 +11,7 @@ library(tidyverse)
 library(janitor)
 library(here)
 library(kableExtra)
+library(lubridate)
 ```
 
 ```{r}
@@ -90,3 +91,29 @@ max_purple = max(purples$SIZE)
 The red urchins were, on average `r mean_size_dif` cm larger and  `r mean_size_percent_dif` % larger in diameter than the purple urchins. The red urchins also had a much larger spread, with diameters ranging from `r min_red` to `r max_red` cm, whereas the purple urchins diamters ranged from `r min_purple` to `r max_purple` cm.
 
 ## Section 2: Exploring purple urchin counts by site and year
+
+### Pre-processing the purple urchins data
+
+```{r}
+# start w urchins
+purple_urchins = urchins %>% 
+  # only purple ones
+  filter(COMMON_NAME == "Purple Urchin") %>% 
+  # use libridate on DATE
+  mutate(DATE = mdy(DATE)) %>% 
+  # add yr column
+  mutate(YEAR = year(DATE)) %>% 
+  # add column w full site names
+  mutate(site_full = case_when(
+    SITE == "NAPL" ~ "Naples Reef",
+    SITE == "AQUE" ~ "Arroyo Quemado Reef",
+    SITE == "CARP" ~ "Carpinteria Reef",
+    SITE == "MOHK" ~ "Mohawk Reef",
+    SITE == "IVEE" ~ "Isla Vista Reef"
+  ))
+```
+
+## Building a table to store the total number of purple urchins observed by site and year
+
+
+
