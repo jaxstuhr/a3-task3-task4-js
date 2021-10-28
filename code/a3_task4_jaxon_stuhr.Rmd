@@ -6,7 +6,7 @@ output: html_document
 ---
 ## Task Overview
 
-
+This code wrangles and analyzes data on the size and prevalence of purple urchins at the Naples reef near Santa Barbara, CA from 2010. Some observed urchins were subject to a treatment in which kelp was removed once, annually, while others were not, and comparison statistics are examined. 
 
 **Data citation:**
 
@@ -50,7 +50,7 @@ ggplot(naples_purple_2010_urchins, aes(x = SIZE, fill = TREATMENT)) +
   geom_histogram(bins = 8) +
   # edit labels
   labs(x = "Diameter [cm]") + 
-  # contorl colors
+  # control colors
   scale_fill_manual(values=c("Purple", "Magenta")) +
   #facet wrap by treatment
   facet_wrap(~ TREATMENT) +
@@ -77,11 +77,16 @@ ggplot(naples_purple_2010_urchins, aes(sample = SIZE, color = TREATMENT)) +
 
 ### Histogram and Quantile-Quantile Plots High-Level Analysis
 
-The treated group, in which kelp was removed annually, has a less-normal appearing distribution. The vast majority of urchins were in the smaller range 
+The treated group, in which kelp was removed annually, has a less-normal appearing distribution. The vast majority of urchins were in the smaller range (2.5 - 3.5 cm) but ranged all the way up to 6.5 cm. The control group appeared more normal in distribution, which was evident in the more linear nature of the Control QQ plot relative to the Annual QQ plot, with size ranging from 2.5 - 5.5 cm. 
+
+## Summary Table of Urchin Statistics
 
 ```{r}
+# start w ze urchins
 nap_purp_10_summary_table = naples_purple_2010_urchins %>% 
+  # group by treatment
   group_by(TREATMENT) %>% 
+  # summary tbl w mean, std, sample size
   summarise(
     mean_size = round(mean(SIZE),1),
     std_size = round(sd(SIZE),1),
@@ -92,11 +97,15 @@ nap_purp_10_summary_table %>%
   # build table w kbl extra, rename columns
   kbl(
     caption = "Table 1: Purple Urchins at Naples Reef in 2010 Summary Statistics", 
+    # name columns
     col.names = c("Treatment", "Mean Diameter [cm]", "Standard Deviation [cm]", "Sample Size")) %>%
+  # make the table purty
   kable_classic(full_width = F, html_font = "Cambria")
 ```
 
+### Summary Statistics Table Analysis
 
+In examining the summary statistics, it appears the kelp removal treatment had little effect on the purple urchins around Naples reef in 2010. The mean diameters for both treated and untreated urchins differed by only 1 mm, as well as the two groups standard deviations. This doesn't quite tell the whole story, however, as the treated group reached it's standard deviation by having a very narrow peak with a very long tail, while the control group had a wider peak but a shorter tail. 
 
 
 
