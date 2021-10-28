@@ -4,6 +4,13 @@ author: "Jaxon Stuhr"
 date: "10/27/2021"
 output: html_document
 ---
+## Task Overview
+
+
+
+**Data citation:**
+
+Reed, D. 2020. SBC LTER: Reef: Long-term experiment: Kelp removal: Urchin size frequency distribution ver 20. Environmental Data Initiative. https://doi.org/10.6073/pasta/5a1e9ef03aa47bd2225c0bb98a02a63b.
 
 ```{r setup, include=TRUE, message=FALSE, warning=FALSE}
 knitr::opts_chunk$set(echo = TRUE, warning = FALSE, message = FALSE)
@@ -26,6 +33,10 @@ urchins_clean = urchins %>%
   mutate(YEAR = year(DATE))
 ```
 
+## Histogram and Quantile-Quantile Plots of Urchins based on Treatment
+
+Here only purple urchins from the Naples reef that were observed in 2010 are considered. A treatment group, "Annual" in which kelp was removed once per winter was compared to a "Control" in which kelp was never removed.
+
 ```{r}
 # filter for year = 2010, name = purple urchin, site = Naples reef
 naples_purple_2010_urchins = urchins_clean %>% 
@@ -33,16 +44,40 @@ naples_purple_2010_urchins = urchins_clean %>%
 ```
 
 ```{r}
-ggplot(naples_purple_2010_urchins, aes(x = SIZE)) + 
-  geom_histogram(bins = 8) + 
-  facet_wrap(~ TREATMENT)
+# start w nap purp 2010 data, fill by treatment
+ggplot(naples_purple_2010_urchins, aes(x = SIZE, fill = TREATMENT)) +
+  # histogram w 8 bins
+  geom_histogram(bins = 8) +
+  # edit labels
+  labs(x = "Diameter [cm]") + 
+  # contorl colors
+  scale_fill_manual(values=c("Purple", "Magenta")) +
+  #facet wrap by treatment
+  facet_wrap(~ TREATMENT) +
+  # change theme
+  theme_linedraw() +
+  # mute legend
+  guides(fill = FALSE) 
 ```
 
 ```{r}
-ggplot(naples_purple_2010_urchins, aes(sample = SIZE)) +
+# start w nap purp 2010 data, color by treatment
+ggplot(naples_purple_2010_urchins, aes(sample = SIZE, color = TREATMENT)) +
+  # quantil quantil plot
   geom_qq() + 
-  facet_wrap(~ TREATMENT)
+  # control colors
+  scale_color_manual(values=c("Purple", "Magenta")) +
+  # facet wrap by treatment
+  facet_wrap(~ TREATMENT) + 
+  # change theme
+  theme_linedraw() +
+  # mute legend
+  guides(fill = FALSE)
 ```
+
+### Histogram and Quantile-Quantile Plots High-Level Analysis
+
+The treated group, in which kelp was removed annually, has a less-normal appearing distribution. The vast majority of urchins were in the smaller range 
 
 ```{r}
 nap_purp_10_summary_table = naples_purple_2010_urchins %>% 
