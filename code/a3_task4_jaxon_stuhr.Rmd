@@ -1,0 +1,68 @@
+---
+title: "Naples Reef (2010*) purple urchins"
+author: "Jaxon Stuhr"
+date: "10/27/2021"
+output: html_document
+---
+
+```{r setup, include=TRUE, message=FALSE, warning=FALSE}
+knitr::opts_chunk$set(echo = TRUE, warning = FALSE, message = FALSE)
+library(tidyverse)
+library(janitor)
+library(here)
+library(kableExtra)
+library(lubridate)
+```
+
+```{r}
+# read in urchins data
+urchins = read_csv(here("data", "urchins.csv"))
+```
+
+```{r}
+# clean up dates and add year column
+urchins_clean = urchins %>% 
+  mutate(DATE = myd(DATE)) %>% 
+  mutate(YEAR = year(DATE))
+```
+
+```{r}
+# filter for year = 2010, name = purple urchin, site = Naples reef
+naples_purple_2010_urchins = urchins_clean %>% 
+  filter(YEAR == 2010, COMMON_NAME == "Purple Urchin", SITE == "NAPL") 
+```
+
+```{r}
+ggplot(naples_purple_2010_urchins, aes(x = SIZE)) + 
+  geom_histogram(bins = 8) + 
+  facet_wrap(~ TREATMENT)
+```
+
+```{r}
+ggplot(naples_purple_2010_urchins, aes(sample = SIZE)) +
+  geom_qq() + 
+  facet_wrap(~ TREATMENT)
+```
+
+```{r}
+nap_purp_10_summary_table = naples_purple_2010_urchins %>% 
+  group_by(TREATMENT) %>% 
+  summarise(
+    mean_size = round(mean(SIZE),1),
+    std_size = round(sd(SIZE),1),
+    sample_size = n()
+  )
+  
+nap_purp_10_summary_table %>%
+  # build table w kbl extra, rename columns
+  kbl(
+    caption = "Table 1: Purple Urchins at Naples Reef in 2010 Summary Statistics", 
+    col.names = c("Treatment", "Mean Diameter [cm]", "Standard Deviation [cm]", "Sample Size")) %>%
+  kable_classic(full_width = F, html_font = "Cambria")
+```
+
+
+
+
+
+
