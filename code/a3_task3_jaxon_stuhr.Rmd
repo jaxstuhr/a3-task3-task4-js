@@ -4,6 +4,14 @@ author: "Jaxon Stuhr"
 date: "10/25/2021"
 output: html_document
 ---
+## Task Overview
+
+This code wrangles and analyzes data on Santa Barbara urchins. Two species, red urchins and purple urchins, are compared at 5 sites around Santa Barbara, CA, on the basis of observed size and prevalence. 
+
+**Data citation:**
+
+Reed, D. 2020. SBC LTER: Reef: Long-term experiment: Kelp removal: Urchin size frequency distribution ver 20. Environmental Data Initiative. https://doi.org/10.6073/pasta/5a1e9ef03aa47bd2225c0bb98a02a63b. 
+
 
 ```{r setup, include=TRUE, message = FALSE, warning=FALSE}
 knitr::opts_chunk$set(echo = TRUE, message = FALSE, warning = FALSE)
@@ -139,9 +147,12 @@ ggplot(purple_urchins_by_site_year, aes(x = YEAR, y = n)) +
   # center title
   theme(plot.title = element_text(hjust = 0.5))
 ```
+
 Fig 2: Observed Urchin counts for purple urchins at 5 sites around Santa Barbara, CA for years 2008 - 2020
 
 ### Purple Urchins Analysis
+
+The purple urchin counts decreased at all sites other than the Isla Vista Reef site, appearing to portray a population decline starting around 2012. We must also, however, take into account the sampling mechanism and insure that sampling procedures were constant across observed years. Even if this is the case, it is also possible that the urchins may be present in higher densities in portions of the reefs that were not sampled. 
 
 
 
